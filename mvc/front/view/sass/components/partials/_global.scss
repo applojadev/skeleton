@@ -1,0 +1,123 @@
+/* #region */ //layout
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;   
+}
+main {
+    flex: 1 0 auto;    
+    padding-top: 10px;    
+}
+/* #endregion */
+
+/* #region */ //miscelânio
+
+.hide {
+    display: none !important;    
+}
+.w-100 {
+    width: 100% !important;
+}
+@media screen and (max-width: 992px) { 
+    .w-100-m {
+        width: 100% !important;
+    }
+}
+.text-center-v {    
+    height: 100%;
+    min-height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;    
+}
+.text-center {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+.text-justify {
+    text-align: justify;
+}
+.text-underline {
+    text-decoration: underline;
+}
+.font-weight-500{
+    font-weight: 500;
+}
+.font-weight-bold{
+    font-weight: bold;
+}
+.font-weight-800{
+    font-weight: 800;
+}
+.font-size-10{
+    font-size: 10px;
+}
+.font-size-11{
+    font-size: 11px;
+}
+.font-size-12{
+    font-size: 12px;
+}
+.font-size-13{
+    font-size: 13px;
+}
+.font-size-14{
+    font-size: 14px;
+}
+.font-size-15{
+    font-size: 15px;
+}
+.font-size-16{
+    font-size: 16px;
+}
+.font-size-17{
+    font-size: 17x;
+}
+.font-size-18{
+    font-size: 18px;
+}
+.font-size-19{
+    font-size: 19px;
+}
+.font-size-20{
+    font-size: 20px;
+}
+.font-size-21{
+    font-size: 21px;
+}
+.font-size-22{
+    font-size: 22px;
+}
+.font-size-23{
+    font-size: 23px;
+}
+.font-size-24{
+    font-size: 24px;
+}
+.font-size-25{
+    font-size: 25px;
+}
+.font-size-26{
+    font-size: 26px;
+}
+@media screen and (min-width: 993px) { 
+    .hoverable-d {
+        -webkit-transition: -webkit-box-shadow .25s;
+        transition: -webkit-box-shadow .25s;
+        transition: box-shadow .25s;
+        transition: box-shadow .25s, -webkit-box-shadow .25s;
+    }    
+    .hoverable-d:hover {
+        -webkit-box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+}
+/* #endregion */

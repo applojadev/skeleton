@@ -1,0 +1,68 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "index Front Compile Sass",
+            "type": "shell",
+            "command": "sass ./mvc/front/view/sass/index.scss ./mvc/front/view/css/index.css",
+            "group": "build",
+            "problemMatcher": []
+        },       
+        {
+            "label": "front Compile Sass",
+            "dependsOn": [
+                "index Front Compile Sass",                         
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+
+        {
+            "label": "index Admin Compile Sass",
+            "type": "shell",
+            "command": "sass ./mvc/admin/view/sass/index.scss ./mvc/admin/view/css/index.css",
+            "group": "build",
+            "problemMatcher": []
+        },       
+        {
+            "label": "admin Compile Sass",
+            "dependsOn": [
+                "index Admin Compile Sass",                         
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+
+    ]
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

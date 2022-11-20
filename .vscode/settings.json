@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "*.tpl": "smarty"
+    },
+    
+    "smarty.highlight": true,
+    "smarty.highlightColor": {
+    
+        "dark": "#FFFFFF25",
+        "light": "#FFFA0040"
+    },
+    "[json]": {
+        "editor.quickSuggestions": {
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace"
+    }    
+}

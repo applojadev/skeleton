@@ -1,0 +1,24 @@
+# Este arquivo é para evitar o rastreamento e indexação de certas partes
+# do seu app por rastreadores da web e spiders
+User-agent: *
+# Directories
+Disallow: /.sass-cache/
+Disallow: /.vscode/
+Disallow: /ajax/
+Disallow: /app/
+Disallow: /cache/
+Disallow: /class/
+Disallow: /download/
+Disallow: /email/
+Disallow: /mvc/
+Disallow: /plugin/
+Disallow: /settings/
+Disallow: /sound/
+Disallow: /tools/
+Disallow: /upload/
+Disallow: /vendor/
+# Private pages
+Disallow: /login
+Disallow: /esqueci-minha-senha
+Disallow: /novo-cadastro
+Disallow: /logout.php

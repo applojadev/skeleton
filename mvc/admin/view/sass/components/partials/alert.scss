@@ -1,0 +1,97 @@
+.box-alert {    
+    margin: 20px 0 20px 0;
+}
+.box-atencao {
+    border-left: 4px solid #ff9800;
+    background-color: #f5f5f5;
+    font-size: 14px;
+    padding: 20px 20px;
+    margin: 22px 0 0 0;
+}
+.alert {
+    padding: 20px;  
+    opacity: 1;
+    transition: opacity 0.6s;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.alert.danger {
+    background-color: #ffebee;
+    border: 1px solid #f44336;
+}
+.alert.success {
+    background-color: #e8f5e9;
+    border: 1px solid #4caf50;
+}
+.alert.info {
+    background-color: #fff3e0;
+    border: 1px solid #ff9800;
+}
+.alert.warning {
+    background-color: #fff3e0;
+    border: 1px solid #ff9800;    
+}
+.alert.dark {
+    background-color: #D6D8D9;
+    border: 1px solid #000000;
+}
+.alert.dark-light {
+    background-color: #ECECEC;
+    border: 1px solid #616161;
+}
+.alert.light {
+    background-color: #fff;
+    border: 1px solid #000;
+}
+.alert.custom-pink {    
+    background-color: #FFEFE0;
+    border: 1px solid #EE3959;
+}
+.alert.custom-purple {    
+    background-color: #EBE5EF;
+    border: 1px solid #68288E;
+}
+.alert.custom-danger {
+    background-color: #fff;
+    border: 1px solid #f44336;
+}
+.alert.custom-success {
+    background-color: #fff;
+    border: 1px solid #4caf50;
+}
+.alert.custom-warning {
+    background-color: #fff;
+    border: 1px solid #ff9800;    
+}
+
+.alert.danger-text {color: #9B1C24;}
+.alert.success-text {color: #155724;}
+.alert.info-text {color: #0083D1;}
+.alert.warning-text {color: #A36442;}
+.alert.dark-text {color: #4F5154;}
+.alert.dark-light-text {color: #212121;}
+.alert.light-text {color: #000;}
+.alert.custom-pink-text {color: #F26E86;}
+.alert.custom-purple-text {color: #9A5AC7;}
+
+.alert-warning-line {
+
+    border: 1px solid #FFE8A1;
+}
+.alert-danger-line {
+    border: 1px solid #F1B0B7;
+}
+.closebtn {
+    margin-left: 15px;
+    color: $third-color;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.closebtn:hover {
+    color: black;
+}

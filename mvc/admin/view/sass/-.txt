@@ -1,0 +1,32 @@
+sass index.scss:../css/index.css
+
+sass category.scss:../css/category.css
+
+sass product.scss:../css/product.css
+
+sass content.scss:../css/content.css
+
+sass contact.scss:../css/contact.css
+
+
+
+sass login.scss:../css/login.css
+
+sass forgot-password.scss:../css/forgot-password.css
+
+sass new-register.scss:../css/new-register.css
+
+sass my-account.scss:../css/my-account.css
+
+sass cart.scss:../css/cart.css
+
+sass checkout.scss:../css/checkout.css
+
+
+
+
+cd mvc\front\view\sass
+
+
+
+dobra VSCode para css     /* #region */ and /* #endregion */
