@@ -2,186 +2,252 @@
 namespace App\Utils;
 
 use App\Utils\Tools;
-
 class SMS
 {
-
-    /**
-     * Ativa ou desativa o envio de SMS
-     *
-     * @var [bool]
-     */
-    private $enabled;
-    /**
-     * Endpoint que será utilizado na integração
-     *
-     * @var [string]
-     */
-    private $endpoint;
-
-    /**
-     * Token utilizado para validar a integração
-     * O token é fornecido pela integradora
-     *
-     * @var [string]
-     */
-    private $token;
-
-    /**
-     * Controla se vai registrar o log de envios
-     *
-     * @var [bool]
-     */
-    private $enabledLog;
-
-    /**
-     * Define o integrador que será utilizado, valores:
-     * -> sms_barato
-     *
-     * @var [type]
-     */
-    private $integrator;
-
-    /**
-     * Método estatico para definição do integrador
-     * Esse método deve ser encadeado com o método "send"
-     *
-     * @param [string] $integrador
-     * @return void
-     */
-    public static function setApi($integrator) {
-
-        include (dirname(2).'/settings/sms.php');
-
-        if ($integrator == 'sms_barato') {
-            
-            $SMS = new SMS();
-
-            $SMS->enabled       = $config['sms_barato']['enabled'];
-            $SMS->integrator    = $integrator;
-            $SMS->endpoint      = $config['sms_barato']['endpoint'];
-            $SMS->token         = $config['sms_barato']['token'];
-            $SMS->enabledLog    = $config['sms_barato']['enabledLog'];
-
-            return $SMS;
-        }
-
-    }
-
+    
     /**
      * Envia o SMS     
-     * Uso: ->  SMS::setApi('sms_barato')->send('(00)00000-0000','Eu sou o texto do SMS');
+     * 
+     * zenvia:     ->  SMS::send('55(12)90000-0000','Mensagem do sms...'); max 160 caracteres
+     * sms_barato: ->  SMS::send('(12)90000-0000','Mensagem do sms...'); max 155 caracteres
      * 
      * @param [string] $num
      * @param [string] $msg
      * @return array ( [status] => success | reject , [response_message] => '')
      */  
-    public function send($num, $msg) {
+    public static function send($num, $msg) {
+        
+        include (dirname(2).'/settings/sms.php');        
 
         date_default_timezone_set('America/Sao_Paulo');
-        $today      = date("Y-m-d H:i:s");
+        
+        $today = date("Y-m-d H:i:s");
+        $msg   = Tools::removeAcentos(trim($msg));        
+        $num   = Tools::trimTEL($num);
 
-        $msg            = Tools::removeAcentos(trim($msg));
-        $recipientsList = explode(',', $num);
+        if ($config['default'] == 'zenvia') {
 
-        if ($this->integrator == 'sms_barato') {
+            if ($config['zenvia']['enabled']) {
+                                    
+                header('Content-Type:application/json;charset=UTF-8');
+                
+                $url = $config['zenvia']['endpoint'];                    
 
-            if ($this->enabled) {
-
-                foreach ($recipientsList as $recipient) {
+                $data = array(
                     
-                    $recipient  = Tools::trimTEL($recipient);
-                    $url        = $this->endpoint . "?chave=" . $this->token . "&dest=". $recipient .  "&text=" .rawurlencode($msg);
-
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt( $curl,CURLOPT_RETURNTRANSFER, true );
-                    $result_sms = curl_exec($curl);
-                    curl_close($curl);
-
-                    $status             = '';
-                    $response_message   = '';
-
-                    if ($result_sms == "ERRO1-1") {
-
-                        $status                 = 'reject' ;
-                        $response_message       = 'Problemas com a sua chave'; 
+                
+                    "from"     => $config['zenvia']['from'],
+                    "to"       => $num,
+                    "contents" => [
+                                    [
                         
-                        if ($this->enabledLog) { $this->registerLog($recipient, $msg, $status, $response_message, $today); }
-                        
-                        return [
-                            'status'            => $status,
-                            'response_message'  => $response_message
-                        ];
+                            "type" => "text",
+                            "text" => "$msg"
+                        ]
+                    ]
+                
 
-                    }
-                    elseif ($result_sms == "ERRO1-2") { 
-                        
-                        $status                 = 'reject' ;
-                        $response_message       = 'Problemas com seu IP (nao autorizado)'; 
-
-                        if ($this->enabledLog) { $this->registerLog($recipient, $msg, $status, $response_message, $today); }
-
-                        return [
-                            'status'            => $status,
-                            'response_message'  => $response_message
-                        ];
-
-                    }
-                    elseif ($result_sms == "ERRO1-3") { 
-                        
-                        $status                 = 'reject' ;
-                        $response_message       = 'Saldo insuficiente para enviar mensagem'; 
-
-                        if ($this->enabledLog) { $this->registerLog($recipient, $msg, $status, $response_message, $today); }
-
-                        return [
-                            'status'            => $status,
-                            'response_message'  => $response_message
-                        ];
-
-                    }
-                    elseif ($result_sms == "ERRO2"  ) { 
-                        
-                        $status                 = 'reject' ;
-                        $response_message       = 'Problemas com o numero de destino (parametro dest)'; 
-                        
-                        if ($this->enabledLog) { $this->registerLog($recipient, $msg, $status, $response_message, $today); }
-
-                        return [
-                            'status'            => $status,
-                            'response_message'  => $response_message
-                        ]; 
-
-                    }
-                    elseif ($result_sms == "ERRO3"  ) { 
-                        
-                        $status                 = 'reject' ;
-                        $response_message       = 'Problemas com o texto (parametro text)'; 
-                        
-                        if ($this->enabledLog) { $this->registerLog($recipient, $msg, $status, $response_message, $today); }
-
-                        return [
-                            'status'            => $status,
-                            'response_message'  => $response_message
-                        ];
-
-                    }                                          
-                    else { 
+                );
+                $data_post = json_encode( $data, JSON_UNESCAPED_UNICODE );                                        
+                $headers = array();          
+                $headers[] = "Content-Type: application/json";
+                $headers[] = "X-API-TOKEN: ". $config['zenvia']['token'];
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);          
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_post);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);          
+                $result = curl_exec($ch);
+                $json = json_decode($result, true);
                     
-                        $status             = 'success' ;
-                        $response_message   = $result_sms;                   
-                                            
-                        if ($this->enabledLog) { $this->registerLog($recipient, $msg, $status, $response_message, $today); }
+                echo '<pre>';  print_r($json);  echo '</pre>';
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                  
+                $status             = '';
+                $response_message   = '';
 
-                        return [
-                            'status'            => $status,
-                            'response_message'  => $response_message
-                        ];
+                if($httpCode == 200) {
+                
+                    $status                 = 'success' ;
+                    $response_message       = 'O SMS foi enviado!'; 
 
-                    }
+                    if ($config['zenvia']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+                        
+                }
+
+                if($httpCode == 400) {
+                
+                    $status                 = 'VALIDATION_ERROR' ;
+                    $response_message       = 'Validation error'; 
+
+                    if ($config['zenvia']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+                        
+                }
+
+                if($httpCode == 401) {
+                
+                    $status                 = 'AUTHENTICATION_ERROR' ;
+                    $response_message       = 'No authorization token was found'; 
+
+                    if ($config['zenvia']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+                        
+                }
+
+                if($httpCode == 404) {
+                
+                    $status                 = 'NOT_FOUND' ;
+                    $response_message       = 'Not found'; 
+
+                    if ($config['zenvia']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+                        
+                }
+
+                if($httpCode == 409) {
+                
+                    $status                 = 'DUPLICATED' ;
+                    $response_message       = 'Entity already exists'; 
+
+                    if ($config['zenvia']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+                        
+                }
+
+                if($httpCode == 500) {
+                
+                    $status                 = 'INTERNAL_ERROR' ;
+                    $response_message       = 'Internal error'; 
+
+                    if ($config['zenvia']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+                        
+                }                                  
+
+            }
+
+        }
+
+        if ($config['default'] == 'sms_barato') {
+
+            if ($config['sms_barato']['enabled']) {                                                                
+                
+                $url = $config['sms_barato']['endpoint'] . "?chave=" . $config['sms_barato']['token'] . "&dest=". $num .  "&text=" .rawurlencode($msg);
+
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt( $curl,CURLOPT_RETURNTRANSFER, true );
+                $result_sms = curl_exec($curl);
+                curl_close($curl);
+
+                $status             = '';
+                $response_message   = '';
+
+                if ($result_sms == "ERRO1-1") {
+
+                    $status                 = 'reject' ;
+                    $response_message       = 'Problemas com a sua chave'; 
+                    
+                    if ($config['sms_barato']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+                    
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
 
                 }
+                elseif ($result_sms == "ERRO1-2") { 
+                    
+                    $status                 = 'reject' ;
+                    $response_message       = 'Problemas com seu IP (nao autorizado)'; 
+
+                    if ($config['sms_barato']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+
+                }
+                elseif ($result_sms == "ERRO1-3") { 
+                    
+                    $status                 = 'reject' ;
+                    $response_message       = 'Saldo insuficiente para enviar mensagem'; 
+
+                    if ($config['sms_barato']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+
+                }
+                elseif ($result_sms == "ERRO2"  ) { 
+                    
+                    $status                 = 'reject' ;
+                    $response_message       = 'Problemas com o numero de destino (parametro dest)'; 
+                    
+                    if ($config['sms_barato']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ]; 
+
+                }
+                elseif ($result_sms == "ERRO3"  ) { 
+                    
+                    $status                 = 'reject' ;
+                    $response_message       = 'Problemas com o texto (parametro text)'; 
+                    
+                    if ($config['sms_barato']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+
+                }                                          
+                else { 
+                
+                    $status             = 'success' ;
+                    $response_message   = $result_sms;                   
+                                        
+                    if ($config['sms_barato']['enabledLog']) { self::registerLog($num, $msg, $status, $response_message, $today); }
+
+                    return [
+                        'status'            => $status,
+                        'response_message'  => $response_message
+                    ];
+
+                }                
 
             }
 
@@ -199,11 +265,10 @@ class SMS
      * @param [datetime] $datetime
      * @return void
      */
-    private function registerLog($num, $msg, $status, $response_message, $datetime){
+    private static function registerLog($num, $msg, $status, $response_message, $datetime){
         
-        //Escopo
+        //Escopo        
     }
-
 
 }
 

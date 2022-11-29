@@ -94,7 +94,7 @@ if ($app->getValue('comprimir_html')) {
 
 
 
-$cnx = DB::connection('mysql')->PDO();
+$cnx = DB::connection('prod-mysql')->PDO();
 
 $sql = "SELECT * FROM informacoes_loja";    
 try {
@@ -124,7 +124,17 @@ echo '<pre>';  print_r(
 
 echo '<pre>';  print_r(
     
-  DB::connection('mysql')
+  DB::connection('dev-mysql')
+      ->table('informacoes_loja')      
+          ->first())
+
+
+
+;  echo '</pre>';
+
+echo '<pre>';  print_r(
+    
+  DB::connection('dev-mysql')
       ->table('produto')
         ->column(['preco_venda','tipo_produto'])
           ->where('preco_venda', '>', 200)        

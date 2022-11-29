@@ -2,24 +2,11 @@
 
 /*
 |--------------------------------------------------------------------------
-| Credentials 
-|--------------------------------------------------------------------------
-|
-| Define as credenciasi para conexão com o banco de dados
-|
-*/
-
-$host      =  ($_SERVER['HTTP_HOST'] == 'localhost') ? "localhost" : "191.252.127.98";
-$database  =  ($_SERVER['HTTP_HOST'] == 'localhost') ? "apploja"   : "lojashop_bd"   ;
-$user      =  ($_SERVER['HTTP_HOST'] == 'localhost') ? "root"      : "lojashop_user" ;
-$password  =  ($_SERVER['HTTP_HOST'] == 'localhost') ? ""          : "prJR%FcrtdxO"  ;      
-  
-/*
-|--------------------------------------------------------------------------
 | config
 |--------------------------------------------------------------------------
 |
-| Define as configurações de conexão
+| Define as configurações de conexão!
+| É possivel criar diversas conexões e com diversos banco de dados, desde que suportadas pelo PDO
 |
 */
 
@@ -31,12 +18,12 @@ $config = [
     |--------------------------------------------------------------------------
     |
     | Define qual conexão será utilizada como padrão por todo app
-    | Para alterar a conexão dinamicamente utilize:
-    | setConnection
+    | Para alterar a conexão dinamicamente utilize o metodo:
+    | -> connection
     |
     */
 
-    'default'     => 'mysql',
+    'default' => ($_SERVER['HTTP_HOST'] == 'localhost') ? "dev-mysql" : "prod-mysql",
 
     /*
     |--------------------------------------------------------------------------
@@ -49,14 +36,31 @@ $config = [
 
     'connections' => [
 
-        'mysql' => [
+        'dev-mysql' => [
 
             'driver'   => 'mysql',
-            'host'     => $host,
+            'host'     => 'localhost',
             'port'     => '3306',
-            'database' => $database,
-            'user'     => $user,
-            'password' => $password,
+            'database' => 'apploja',
+            'user'     => 'root',
+            'password' => '',
+            'options'  => [
+
+                PDO::ATTR_TIMEOUT => 5,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+
+            ]
+
+        ],        
+
+        'prod-mysql' => [
+
+            'driver'   => 'mysql',
+            'host'     => '191.252.127.98',
+            'port'     => '3306',
+            'database' => 'lojashop_bd',
+            'user'     => 'lojashop_user',
+            'password' => 'prJR%FcrtdxO',
             'options'  => [
 
                 PDO::ATTR_TIMEOUT => 5,

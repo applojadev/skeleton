@@ -158,7 +158,7 @@ class DB
                 $con->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
                 $con->setAttribute( PDO::MYSQL_ATTR_FOUND_ROWS, true );            
                 $instance->con = $con;                      
-                $instance->connections[$name_connection] = $con;                   
+                $instance->connections[$name_connection] = $con; 
             }
             catch ( PDOException $error ) {    
                 
